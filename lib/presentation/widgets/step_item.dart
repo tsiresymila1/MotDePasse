@@ -16,18 +16,29 @@ class StepItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin:
-      EdgeInsets.symmetric(horizontal: isActive ? 12 : 16, vertical: 12),
+          EdgeInsets.symmetric(horizontal: isActive ? 12 : 16, vertical: 12),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
-          border: isActive
-              ? const Border.symmetric(
-              horizontal: BorderSide.none,
-              vertical: BorderSide(
-                width: 10,
-                color: Color(0xffFFD700),
-              ))
-              : const Border(),
-          color: Colors.deepOrange),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.deepOrange,
+          boxShadow: [
+            BoxShadow(
+                color: isActive
+                    ? const Color(0xd7FFD700)
+                    : const Color(0xe5e85020),
+                blurStyle: BlurStyle.inner,
+                blurRadius: 12,
+                spreadRadius: 2,
+                offset: const Offset(-2, 4)),
+            BoxShadow(
+                color: isActive
+                    ? const Color(0xd7FFD700)
+                    : const Color(0xd7e85020),
+                blurStyle: BlurStyle.inner,
+                blurRadius: 12,
+                spreadRadius: 2,
+                offset: const Offset(-2, 4))
+          ]),
       alignment: Alignment.center,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -36,7 +47,11 @@ class StepItem extends StatelessWidget {
             title,
             style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
-          const Icon(Icons.monetization_on_rounded, color: Color(0xffFFD700),size: 16,)
+          const Icon(
+            Icons.monetization_on_rounded,
+            color: Color(0xffFFD700),
+            size: 16,
+          )
         ],
       ),
     );

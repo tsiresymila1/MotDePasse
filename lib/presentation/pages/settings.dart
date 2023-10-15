@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:motdepasse/presentation/widgets/counter.dart';
 import 'package:motdepasse/presentation/widgets/storage.dart';
-import 'package:motdepasse/presentation/widgets/switch.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -12,6 +11,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -20,89 +21,40 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormBuilderState>();
-    final formDeleteKey = GlobalKey<FormBuilderState>();
-    List<String> words = (context.storage.read<List<dynamic>>("words") ?? [])
-        .map((e) => e.toString())
-        .toList();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Settings",
-          style: TextStyle(fontWeight: FontWeight.bold),
+    controller.text = context.storage.read<String>("duration") ?? "3";
+    return Container(
+      padding: const EdgeInsets.only(top: 20),
+      color: Colors.deepOrange.withOpacity(1),
+      child: Scaffold(
+        backgroundColor: Colors.deepOrange.withOpacity(0.8),
+        appBar: AppBar(
+          leading: const BackButton(),
+          backgroundColor: Colors.transparent,
+          title: const Text(
+            "Settings",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            FormBuilder(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FormBuilderTextField(
-                    name: "word",
-                    decoration: const InputDecoration(hintText: "Add new word"),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        formKey.currentState?.save();
-                        words.add(formKey.currentState?.value["word"]);
-                        context.storage.write("words", words);
-                        setState(() {});
-                      },
-                      child: const Text("Save"))
-                ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ListTile(
+                leading: const Text(
+                  "Duration (minutes)",
+                  style: TextStyle(fontSize: 16),
+                ),
+                trailing: Counter(
+                  initialState: int.parse(
+                      context.storage.read<String>("duration") ?? "3"),
+                  onChanged: (int value) {
+                    context.storage.write("duration", value.toString());
+                  },
+                ),
               ),
-            ),
-            FormBuilder(
-              key: formDeleteKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FormBuilderTextField(
-                    name: "word",
-                    decoration: const InputDecoration(
-                        hintText: "Delete words ( separated by ;)"),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        formDeleteKey.currentState?.save();
-                        context.storage.write(
-                            "words",
-                            words
-                                .where((element) => !(formDeleteKey
-                                            .currentState?.value["word"]
-                                            .toString()
-                                            .trim()
-                                            .split(";") ??
-                                        [])
-                                    .contains(element))
-                                .toList());
-                        setState(() {});
-                      },
-                      child: const Text("Delete"))
-                ],
-              ),
-            ),
-            ListTile(
-              title: const Text("From saved words"),
-              trailing: SwitchWidget(
-                  initialState: context.storage.read<bool>("saved") ?? false,
-                  onChanged: (e) {
-                    context.storage.write("saved", e);
-                  }),
-            ),
-            Expanded(
-                child: ListView.builder(
-                    itemCount: words.length,
-                    itemBuilder: (context, index) {
-                      String current = words[index];
-                      return ListTile(
-                        title: Text(current),
-                      );
-                    }))
-          ],
+            ],
+          ),
         ),
       ),
     );

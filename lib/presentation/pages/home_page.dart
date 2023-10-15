@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:motdepasse/presentation/bloc/word/word_bloc.dart';
-import 'package:motdepasse/presentation/bloc/word/word_state.dart';
-import "package:flutter_bloc/flutter_bloc.dart";
 import 'package:motdepasse/presentation/bloc/word_step/word_step_bloc.dart';
 import 'package:motdepasse/presentation/bloc/word_step/word_step_event.dart';
 import '../bloc/word/word_event.dart';
@@ -22,11 +23,18 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: SizedBox(
+                width: 300,
+                  child:
+                      Lottie.asset("assets/lotties/password.json", repeat: true)),
+            ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Text(
                 "MOT DE PASSE",
-                style: TextStyle(color: Colors.white, fontSize: 32),
+                style: TextStyle(color: Colors.white, fontSize: 42),
               ),
             ),
             Row(
@@ -42,14 +50,14 @@ class HomePage extends StatelessWidget {
                     context.read<WordBloc>().add(WordInitEvent());
                     context.push("/home");
                   },
-                  icon: const Icon(Icons.play_circle, color: Colors.white),
+                  icon: const Icon(OctIcons.play_16, color: Colors.white),
                 ),
                 ButtonIcon(
                   title: "Setting",
                   onPressed: () {
                     context.push("/setting");
                   },
-                  icon: const Icon(Icons.settings, color: Colors.white),
+                  icon: const Icon(OctIcons.tools_16, color: Colors.white),
                 ),
               ],
             ),
